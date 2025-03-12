@@ -12,9 +12,7 @@ function App() {
   const [ selectedColor, setSelectedColor] = useState("red")
   const [menuPosition, setMenuPosition ] = useState({ x: 0, y: 0 });
   const optionsColors = ["red", "blue", "green", "yellow", "purple"]
-
-  
-
+  const [drawing, setDrawing] = useState(false)
   
 
     useEffect (() => {
@@ -31,54 +29,73 @@ function App() {
     }, [])
 
 
-    const toggleCell = (i) => {
+    const paintCell = (i) => {
       setCell((prevCells) => ({
         ...prevCells,
-        [i]: prevCells[i] ? null : selectedColor,
+        [i]: selectedColor,
       }));
     };
-
-    const handleRightClick = (e, i) => {
-      e.preventDefault()
+  
+    
+    const handleRightClick = (e) => {
+      e.preventDefault();
       setMenuPosition({ x: e.clientX, y: e.clientY });
       setMenuColorVisible(true);
-      
-      
     };
-
+  
+    
     const handleSelectedColor = (color) => {
-      setSelectedColor(color) 
-      setMenuColorVisible(false)
-      console.log(menuColorVisible);
-      
+      setSelectedColor(color);
+      setMenuColorVisible(false);
+    };
+  
+    
+    const handleMouseDown = (e, i) => {
+      if (e.button === 0) { 
+        setDrawing(true);
+        paintCell(i);
+      }
+    };
+  
+    
+    const handleMouseUp = () => {
+      setDrawing(false);
+    };
+  
+    
+    const handleMouseEnter = (i) => {
+      if (drawing) {
+        paintCell(i);
+      }
     };
 
   return (
-    <div 
-    style={{
-      display : "grid",
-      width : "100vw",
-      height : "100vh",
-      gridTemplateColumns : `repeat(${numColumns}, ${cellSize}px)`,
-      gridTemplateRows : `repeat(${numRow}, ${cellSize}px)`,
-      overflow : "hidden"
-    }}
-    >
-    {[...Array(numColumns * numRow)].map((e, i ) => (
-      <div
-      key={i}
-      onClick={() => toggleCell(i)}
-      onContextMenu={(e) => handleRightClick(e, i)}
+    <div
       style={{
-        width: cellSize,
-        height: cellSize,
-        backgroundColor: cell[i] || 'white',
-        border: '1px solid #ccc',
+        display: "grid",
+        width: "100vw",
+        height: "100vh",
+        gridTemplateColumns: `repeat(${numColumns}, ${cellSize}px)`,
+        gridTemplateRows: `repeat(${numRow}, ${cellSize}px)`,
+        overflow: "hidden"
       }}
+      onMouseUp={handleMouseUp} 
+    
     >
-      
-    </div>
-    ))}
+    {[...Array(numColumns * numRow)].map((_, i) => (
+        <div
+          key={i}
+          onMouseDown={(e) => handleMouseDown(e, i)}
+          onMouseEnter={() => handleMouseEnter(i)}
+          onContextMenu={handleRightClick} 
+          style={{
+            width: cellSize,
+            height: cellSize,
+            backgroundColor: cell[i] || 'white',
+            border: '1px solid #ccc',
+          }}
+        ></div>
+      ))}
      { menuColorVisible && (
       <div style={{
         position: "absolute",
@@ -106,14 +123,10 @@ function App() {
             borderRadius : "5px",
             border: "1px solid black"
           }}>
-
           </div>
         ))}
-        
-
       </div>
-  )}
-      
+  )}    
     </div>
   )
 }
