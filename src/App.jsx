@@ -1,42 +1,49 @@
-import { useEffect, useState } from 'react';
-import useDrawing from './hooks/useDrawing';
-import Grid from './components/Grid';
-import ColorMenu from './components/MenuColor';
-import './App.css';
+import { useEffect, useState } from 'react'
+import useDrawing from './hooks/useDrawing'
+import Grid from './components/Grid'
+import MenuColor from './components/MenuColor'
+import './App.css'
 
-export default function App() {
-  const numColumns = 100;
-  const optionsColors = ['red', 'blue', 'green', 'yellow', 'purple'];
-  const [selectedColor, setSelectedColor] = useState('red');
-  const [cellSize, setCellSize] = useState(window.innerWidth / numColumns);
-  const [numRow, setNumRow] = useState(0);
-  const [menuColorVisible, setMenuColorVisible] = useState(false);
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+export default function App () {
+  const numColumns = 100
+  const menuColorWidth = 150
+  const optionsColors = ['red', 'blue', 'green', 'yellow', 'purple']
+  const [selectedColor, setSelectedColor] = useState('red')
+  const [cellSize, setCellSize] = useState(window.innerWidth / numColumns)
+  const [numRow, setNumRow] = useState(0)
+  const [menuColorVisible, setMenuColorVisible] = useState(false)
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
 
   const { cell, handleMouseDown, handleMouseUp, handleMouseEnter } =
-    useDrawing(numColumns, selectedColor);
+    useDrawing(numColumns, selectedColor)
 
   useEffect(() => {
     const updateGrid = () => {
-      const newCellSize = window.innerWidth / numColumns;
-      setCellSize(newCellSize);
-      setNumRow(Math.floor(window.innerHeight / newCellSize));
-    };
-    updateGrid();
-    window.addEventListener('resize', updateGrid);
-    return () => window.removeEventListener('resize', updateGrid);
-  }, []);
+      const newCellSize = window.innerWidth / numColumns
+      setCellSize(newCellSize)
+      setNumRow(Math.floor(window.innerHeight / newCellSize))
+    }
+    updateGrid()
+    window.addEventListener('resize', updateGrid)
+    return () => window.removeEventListener('resize', updateGrid)
+  }, [])
 
   const handleRightClick = (e) => {
-    e.preventDefault();
-    setMenuPosition({ x: e.clientX, y: e.clientY });
-    setMenuColorVisible(true);
-  };
+    e.preventDefault()
+    console.log(e.clientX)
+    console.log(window.innerWidth)
+    if ((e.clientX + menuColorWidth) > window.innerWidth) {
+      setMenuPosition({ x: (e.clientX - menuColorWidth), y: e.clientY })
+      console.log(menuPosition)
+    } else {
+      setMenuPosition({ x: e.clientX, y: e.clientY })
+    }
+    setMenuColorVisible(true)
+  }
 
   return (
     <div>
       <Grid
-        
         numColumns={numColumns}
         numRow={numRow}
         cellSize={cellSize}
@@ -47,8 +54,9 @@ export default function App() {
         handleRightClick={handleRightClick}
       />
       {menuColorVisible && (
-        <ColorMenu
-          data-testid="color-menu"
+        <MenuColor
+          data-testid='color-menu'
+          menuColorWidth={menuColorWidth}
           position={menuPosition}
           optionsColors={optionsColors}
           onSelectColor={setSelectedColor}
@@ -56,5 +64,5 @@ export default function App() {
         />
       )}
     </div>
-  );
+  )
 }

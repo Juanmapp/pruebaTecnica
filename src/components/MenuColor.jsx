@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ColorMenu = ({ position, optionsColors, onSelectColor, onClose }) => {
+const MenuColor = ({ position, optionsColors, onSelectColor, onClose, menuColorWidth }) => {
   return (
     <div
       style={{
@@ -12,14 +12,18 @@ const ColorMenu = ({ position, optionsColors, onSelectColor, onClose }) => {
         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         borderRadius: '5px',
         display: 'flex',
-        gap: '5px'
+        gap: '5px',
+        width: `${menuColorWidth}`
       }}
       onMouseLeave={onClose}
     >
       {optionsColors.map((color) => (
         <div
           key={color}
-          onClick={() => onSelectColor(color)}
+          onClick={() => {
+            onSelectColor(color)
+            onClose()
+          }}
           style={{
             width: '20px',
             height: '20px',
@@ -34,4 +38,4 @@ const ColorMenu = ({ position, optionsColors, onSelectColor, onClose }) => {
   )
 }
 
-export default ColorMenu
+export default MenuColor

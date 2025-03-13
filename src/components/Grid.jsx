@@ -1,22 +1,22 @@
-import React from 'react';
+import React from 'react'
 
 const Grid = ({ numColumns, numRow, cellSize, cell, handleMouseDown, handleMouseUp, handleMouseEnter, handleRightClick }) => {
   return (
     <div
-      role="grid"
+      role='grid'
       style={{
         display: 'grid',
         width: '100vw',
         height: '100vh',
         gridTemplateColumns: `repeat(${numColumns}, ${cellSize}px)`,
         gridTemplateRows: `repeat(${numRow}, ${cellSize}px)`,
-        overflow: 'hidden',
+        overflow: 'hidden'
       }}
       onMouseUp={handleMouseUp}
     >
       {[...Array(numColumns * numRow)].map((_, i) => (
         <div
-        role="cell"
+          role='cell'
           key={i}
           onMouseDown={(e) => handleMouseDown(e, i)}
           onMouseEnter={() => handleMouseEnter(i)}
@@ -25,12 +25,12 @@ const Grid = ({ numColumns, numRow, cellSize, cell, handleMouseDown, handleMouse
             width: cellSize,
             height: cellSize,
             backgroundColor: cell[i] || 'white',
-            border: '1px solid #ccc',
+            border: '1px solid #ccc'
           }}
-        ></div>
+        />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default Grid;
+export default Grid
