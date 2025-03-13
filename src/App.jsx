@@ -30,11 +30,8 @@ export default function App () {
 
   const handleRightClick = (e) => {
     e.preventDefault()
-    console.log(e.clientX)
-    console.log(window.innerWidth)
     if ((e.clientX + menuColorWidth) > window.innerWidth) {
       setMenuPosition({ x: (e.clientX - menuColorWidth), y: e.clientY })
-      console.log(menuPosition)
     } else {
       setMenuPosition({ x: e.clientX, y: e.clientY })
     }
